@@ -1,5 +1,5 @@
 import os; os.environ['no_proxy'] = '*' # 避免代理网络产生意外污染
-
+import subprocess
 def main():
     import gradio as gr
     from request_llm.bridge_all import predict
@@ -9,7 +9,8 @@ def main():
         get_conf('proxies', 'WEB_PORT', 'LLM_MODEL', 'CONCURRENT_COUNT', 'AUTHENTICATION', 'CHATBOT_HEIGHT', 'LAYOUT', 'API_KEY', 'AVAIL_LLM_MODELS')
 
     # 如果WEB_PORT是-1, 则随机选取WEB端口
-    PORT = find_free_port() if WEB_PORT <= 0 else WEB_PORT
+    # PORT = find_free_port() if WEB_PORT <= 0 else WEB_PORT
+    PORT = 45678
     if not AUTHENTICATION: AUTHENTICATION = None
 
     from check_proxy import get_current_version
@@ -187,8 +188,12 @@ def main():
         def open():
             time.sleep(2)       # 打开浏览器
             DARK_MODE, = get_conf('DARK_MODE')
-            if DARK_MODE: webbrowser.open_new_tab(f"http://localhost:{PORT}/?__dark-theme=true")
-            else: webbrowser.open_new_tab(f"http://localhost:{PORT}")
+            # if DARK_MODE: webbrowser.open_new_tab(f"http://localhost:{PORT}/?__dark-theme=true")
+            # else: webbrowser.open_new_tab(f"http://localhost:{PORT}")
+            # subprocess.Popen(r"ChatGPT-AC-win32-x64/ChatGPT-AC.exe")
+            path1 = os.path.abspath('.')+"\ChatGPT-AC-win32-x64\ChatGPT-AC.exe"
+            path1=r'"'+path1+'"'
+            os.system(path1)
         threading.Thread(target=open, name="open-browser", daemon=True).start()
         threading.Thread(target=auto_update, name="self-upgrade", daemon=True).start()
         threading.Thread(target=warm_up_modules, name="warm-up", daemon=True).start()
